@@ -26,7 +26,7 @@ sudo ./install.sh
 
 It is compatible with [update-motd](https://launchpad.net/update-motd) used by Ubuntu.
 
-For all other distributions you will have to add the following line to `/etc/pam.d/sshd`:
+For not compatible distributions you will have to add the following line to `/etc/pam.d/sshd`:
 
 ```
 session    optional   pam_exec.so          stdout /etc/update-motd.d/00-basic
