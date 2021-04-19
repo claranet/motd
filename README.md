@@ -2,13 +2,9 @@
 
 Here is motd for Claranet.
 
-## Preparation
+## Preview
 
-Make sure you have the `PrintMotd` option set to `yes` in your sshd config.
-
-You could also want to disable the "last login" information by configuring `PrintLastLog` to `no`.
-
-Don't forget to restart sshd after.
+![basic](examples/basic.png "basic motd")
 
 ## Installation
 
@@ -35,3 +31,5 @@ For all other distributions you will have to add the following line to `/etc/pam
 ```
 session    optional   pam_exec.so          stdout /etc/update-motd.d/00-basic
 ```
+
+You could also want to disable the "last login" information by configuring `PrintLastLog` to `no` in `/etc/ssh/sshd_config`.
