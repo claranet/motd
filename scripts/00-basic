@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# display banner
-cat $(dirname $0)/motd
-
 # get load averages
 IFS=" " read LOAD1 LOAD5 LOAD15 <<<$(awk '{ print $1,$2,$3 }' /proc/loadavg)
 # get free memory
