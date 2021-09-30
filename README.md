@@ -32,7 +32,7 @@ It do a low level installation so it is compatible with _all_ Linux distros
 
 ```bash
 mkdir /etc/update-motd.d
-curl -s https://raw.githubusercontent.com/claranet/motd/master/dynmotd -o /etc/update-motd.d/00-basic
+curl -s https://raw.githubusercontent.com/claranet/motd/master/scripts/00-basic -o /etc/update-motd.d/00-basic
 chmod +x /etc/update-motd.d/00-basic
 ```
 
