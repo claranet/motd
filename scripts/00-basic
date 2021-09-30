@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# display banner
-cat $(dirname $0)/motd
-
 # get load averages
 IFS=" " read LOAD1 LOAD5 LOAD15 <<<$(awk '{ print $1,$2,$3 }' /proc/loadavg)
 # get free memory
@@ -16,32 +13,33 @@ PROCESS_USER=$(echo "$PROCESS"| grep -v root | awk {'print $2'} | awk '{ SUM += 
 PROCESSOR_NAME=$(grep "model name" /proc/cpuinfo | cut -d ' ' -f3- | awk {'print $0'} | head -1)
 PROCESSOR_COUNT=$(grep -ioP 'processor\t:' /proc/cpuinfo | wc -l)
 
+LOCAL_IP_ADDRESSES=$(ip address | grep -E "inet(6)? " | grep -v 127.0.0.1 | grep -v 'inet6 ::1' | awk '{print $2;}' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\n\                /g')
+
+# colors
 W="\e[0;39m"
 G="\e[1;32m"
+R="\e[1;31m"
+dim="\e[2m"
+undim="\e[0m"
 
-echo -e "${W}system info:
-$W  Hostname....: $W${HOSTNAME}
-$W  Distro......: $W$(grep "PRETTY_NAME" /etc/*release | cut -d "=" -f 2- | sed 's/"//g')
-$W  Kernel......: $W$(uname -sr)
-$W  Uptime......: $W$(uptime -p)
-$W  Load........: $G$LOAD1$W (1m), $G$LOAD5$W (5m), $G$LOAD15$W (15m)
-$W  Processes...:$W $G$PROCESS_ROOT$W (root), $G$PROCESS_USER$W (user), $G$PROCESS_ALL$W (total)
-$W  CPU.........: $W$PROCESSOR_NAME ($G$PROCESSOR_COUNT$W vCPU)
-$W  Memory......: $G$USED$W used, $G$AVAIL$W avail, $G$TOTAL$W total$W"
+echo -e "${W}System info:
+$W  Hostname$dim····$undim: $W${HOSTNAME}
+$W  Distro$dim······$undim: $W$(grep "PRETTY_NAME" /etc/*release | cut -d "=" -f 2- | sed 's/"//g')
+$W  Kernel$dim······$undim: $W$(uname -sr)
+$W  Uptime$dim······$undim: $W$(uptime -p)
+$W  Load$dim········$undim: $G$LOAD1$W (1m), $G$LOAD5$W (5m), $G$LOAD15$W (15m)
+$W  Processes$dim···$undim: $G$PROCESS_ROOT$W (root), $G$PROCESS_USER$W (user), $G$PROCESS_ALL$W (total)
+$W  CPU$dim·········$undim: $W$PROCESSOR_NAME ($G$PROCESSOR_COUNT$W vCPU)
+$W  Memory$dim······$undim: $G$USED$W used, $G$AVAIL$W avail, $G$TOTAL$W total
+$W  Local IPs$dim···$undim: $LOCAL_IP_ADDRESSES$W"
 
 # config
 max_usage=90
 bar_width=50
-# colors
-white="\e[39m"
-green="\e[1;32m"
-red="\e[1;31m"
-dim="\e[2m"
-undim="\e[0m"
 
 # disk usage: ignore zfs, squashfs & tmpfs
 mapfile -t dfs < <(df -H -x zfs -x squashfs -x tmpfs -x devtmpfs -x overlay --output=target,pcent,size | tail -n+2)
-printf "\ndisk usage:\n"
+printf "\nDisk usage:\n"
 
 for line in "${dfs[@]}"; do
     # get disk usage
@@ -49,9 +47,9 @@ for line in "${dfs[@]}"; do
     used_width=$((($usage*$bar_width)/100))
     # color is green if usage < max_usage, else red
     if [ "${usage}" -ge "${max_usage}" ]; then
-        color=$red
+        color=$R
     else
-        color=$green
+        color=$G
     fi
     # print green/red bar until used_width
     bar="[${color}"
@@ -59,9 +57,9 @@ for line in "${dfs[@]}"; do
         bar+="="
     done
     # print dimmmed bar until end
-    bar+="${white}${dim}"
+    bar+="${W}${dim}"
     for ((i=$used_width; i<$bar_width; i++)); do
-        bar+="="
+        bar+="·"
     done
     bar+="${undim}]"
     # print usage line & bar
