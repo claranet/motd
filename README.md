@@ -6,6 +6,12 @@ Here is motd for Claranet.
 
 ![basic](examples/basic.png "basic motd")
 
+## Requirements
+
+Your system must use an UTF-8 locale
+
+Ensure that your `$LANG` variable equals `xx_XX.UTF-8`
+
 ## Installation
 
 ### Banner
