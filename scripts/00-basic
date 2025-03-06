@@ -61,6 +61,6 @@ while read line; do
     # print usage line & bar
     echo "${line}" | awk '{ printf("%-31s%+3s used out of %+4s\n", $1, $2, $3); }' | sed -e 's/^/  /'
     echo -e "${bar}" | sed -e 's/^/  /'
-done < <(df -H -x zfs -x squashfs -x tmpfs -x devtmpfs -x overlay -x nfs -x nfs4 -x cifs --output=target,pcent,size | tail -n+2)
+done < <(df -h -x zfs -x squashfs -x tmpfs -x devtmpfs -x overlay -x nfs -x nfs4 -x cifs --output=target,pcent,size | tail -n+2)
 
 printf "\n"
